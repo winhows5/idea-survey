@@ -67,6 +67,27 @@ export default function EvaluationPage() {
   const [error, setError] = useState('');
   const [evaluatedApp, setEvaluatedApp] = useState('');
   const [appName, setAppName] = useState('');
+  const [surveyType, setSurveyType] = useState<string>('intent'); // Add survey type state
+
+  // Function to get intro text based on survey type
+  const getIntroText = (appName: string, surveyType: string) => {
+    const baseText = (
+      <>
+        Below are 10 new features proposed for <span className="font-bold text-red-600">{appName}</span>. Please evaluate each idea, and SELECT ALL that you think
+      </>
+    );
+    
+    switch (surveyType) {
+      case 'intent':
+        return <>{baseText} you would use in the app.</>;
+      case 'usefulness':
+        return <>{baseText} are useful (i.e., potentially beneficial or helpful).</>;
+      case 'originality':
+        return <>{baseText} are original (novel, different).</>;
+      default:
+        return <>{baseText} you would use in the app.</>;
+    }
+  };
 
   useEffect(() => {
     loadIdeas();
@@ -80,6 +101,9 @@ export default function EvaluationPage() {
       // Get survey state
       const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
       const appId = surveyState.evaluatedApp;
+      
+      // Set survey type from survey state
+      setSurveyType(surveyState.surveyType || 'intent');
       
       if (!appId && source !== 'VALIDATION') {
         setError('No app selected for evaluation. Please restart the survey.');
@@ -292,9 +316,7 @@ export default function EvaluationPage() {
       <div className="space-y-6">
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
           <p className="text-blue-800 font-medium text-lg">
-            
-              Below are 10 new features proposed for <span className="font-bold text-red-600">{appName}</span>, the mobile app. Please evaluate each idea, and SELECT ALL that you think you would use in the app. 
-              
+            {getIntroText(appName, surveyType)}
           </p>
           <p className="text-blue-800 font-medium text-lg">     
             <span className="font-bold text-red-600">Do NOT select any features that are already available in the app.</span>

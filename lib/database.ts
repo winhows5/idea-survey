@@ -29,7 +29,8 @@ export async function getConnection() {
   }
 }
 
-export async function saveSurveyResponse(data: any) {
+// Function to save survey response to specific table based on survey type
+export async function saveSurveyResponseByType(data: any, surveyType: string) {
   const connection = await getConnection();
   try {
     // Convert ISO datetime strings to MySQL format
@@ -39,8 +40,24 @@ export async function saveSurveyResponse(data: any) {
       return date.toISOString().slice(0, 19).replace('T', ' ');
     };
 
+    // Determine table name based on survey type
+    let tableName: string;
+    switch (surveyType) {
+      case 'intent':
+        tableName = 'survey_intent';
+        break;
+      case 'usefulness':
+        tableName = 'survey_usefulness';
+        break;
+      case 'originality':
+        tableName = 'survey_originality';
+        break;
+      default:
+        tableName = 'survey_responses'; // fallback to original table
+    }
+
     const query = `
-      INSERT INTO survey_responses (
+      INSERT INTO ${tableName} (
         ResponseId, StartDate, EndDate, Progress, Duration, Finished,
         app_id_selected, app_id_evaluated, prolific_id, familiarity,
         DBGNN, UFGC, COT, ZERO, Validation

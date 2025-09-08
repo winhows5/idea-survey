@@ -1,12 +1,22 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function HomePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isStarting, setIsStarting] = useState(false);
+  const [surveyType, setSurveyType] = useState<string>('intent'); // default to intent
+  
+  useEffect(() => {
+    // Get survey type from URL parameters
+    const typeParam = searchParams.get('type');
+    if (typeParam && ['intent', 'usefulness', 'originality'].includes(typeParam)) {
+      setSurveyType(typeParam);
+    }
+  }, [searchParams]);
   
   const handleStartSurvey = () => {
     setIsStarting(true);
@@ -19,6 +29,7 @@ export default function HomePage() {
     localStorage.setItem('surveyState', JSON.stringify({
       responseId,
       startDate,
+      surveyType, // Store the survey type
       selectedApps: [],
       evaluatedApp: '',
       prolificId: '',

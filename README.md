@@ -14,7 +14,7 @@ This is a Next.js survey application for collecting user feedback on app ideas f
 
 ```bash
 # Navigate to the project directory
-cd questionaire
+cd idea-survey
 
 # Install dependencies
 npm install

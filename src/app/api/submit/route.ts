@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveSurveyResponse } from '../../../../lib/database';
+import { saveSurveyResponseByType } from '../../../../lib/database';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
@@ -10,6 +10,9 @@ export async function POST(request: NextRequest) {
     
     // Use existing response ID from survey data, or generate new one if missing
     const responseId = surveyData.responseId || uuidv4();
+    
+    // Get survey type from survey data
+    const surveyType = surveyData.surveyType || 'intent'; // default to intent
     
     // Calculate duration
     const startTime = new Date(surveyData.startDate || surveyData.startTime);
@@ -53,13 +56,16 @@ export async function POST(request: NextRequest) {
     };
     
     console.log('Prepared database data:', JSON.stringify(dbData, null, 2));
+    console.log('Survey type:', surveyType);
     
-    await saveSurveyResponse(dbData);
+    // Save to appropriate table based on survey type
+    await saveSurveyResponseByType(dbData, surveyType);
     
     return NextResponse.json({
       success: true,
       responseId: responseId,
-      message: 'Survey response saved successfully'
+      surveyType: surveyType,
+      message: `Survey response saved successfully to ${surveyType} table`
     });
     
   } catch (error) {
