@@ -9,7 +9,7 @@ interface App {
   app_name: string;
 }
 
-export default function FamiliarityPage() {
+export default function SelectPage() {
   const router = useRouter();
   const [apps, setApps] = useState<App[]>([]);
   const [selectedApps, setSelectedApps] = useState<string[]>([]);

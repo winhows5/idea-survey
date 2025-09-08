@@ -41,9 +41,9 @@ export default function FrequencyPage() {
     console.log('Selected app IDs:', selectedAppIds);
     
     if (selectedAppIds.length === 0) {
-      // If no familiar apps, redirect back to familiarity page
-      console.log('No selected apps found, redirecting to familiarity page');
-      router.push('/familiarity');
+      // If no familiar apps, redirect back to select page
+      console.log('No selected apps found, redirecting to select page');
+      router.push('/select');
       return;
     }
 
@@ -240,7 +240,7 @@ export default function FrequencyPage() {
 
         <div className="flex justify-between items-center pt-6 border-t">
           <button
-            onClick={() => router.push('/familiarity')}
+            onClick={() => router.push('/select')}
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
             Back

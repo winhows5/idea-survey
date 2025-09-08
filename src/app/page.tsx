@@ -34,7 +34,7 @@ export default function HomePage() {
       currentPage: 0
     }));
     
-    router.push('/familiarity');
+    router.push('/select');
   };
   
   return (
