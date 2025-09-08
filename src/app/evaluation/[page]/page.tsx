@@ -89,7 +89,7 @@ export default function EvaluationPage() {
       setEvaluatedApp(appId);
       
       // Get app name from API
-      if (appId && source !== 'VALIDATION') {
+      if (appId) {
         const appsResponse = await fetch('/api/apps');
         const appsData = await appsResponse.json();
         if (appsData.success) {
