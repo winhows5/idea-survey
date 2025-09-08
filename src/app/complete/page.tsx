@@ -134,16 +134,9 @@ export default function CompletePage() {
           </div>
         )}
         
-        <p className="text-gray-500 mb-8">
-          You can now close this window or return to the beginning.
+        <p className="text-gray-500">
+          Thank you for your participation in our research. You can now close this window.
         </p>
-        
-        <button
-          onClick={handleRestart}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Start New Survey
-        </button>
       </div>
     </SurveyLayout>
   );
