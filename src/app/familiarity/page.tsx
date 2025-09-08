@@ -24,8 +24,9 @@ export default function FamiliarityPage() {
       const data = await response.json();
 
       if (data.success) {
-        // Now that API returns all apps, we need to randomly select 20
-        const allApps = data.apps;
+        // Filter out apps with app_id "NA" before randomizing
+        const allApps = data.apps.filter((app: App) => app.app_id !== "NA");
+        // Randomly select 20 apps from valid apps
         const shuffled = [...allApps].sort(() => Math.random() - 0.5);
         const randomApps = shuffled.slice(0, 20);
         setApps(randomApps);
