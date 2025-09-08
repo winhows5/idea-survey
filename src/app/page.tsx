@@ -61,36 +61,23 @@ export default function HomePage() {
           <div className="bg-white rounded-xl shadow-lg p-8 border-l-4 border-red-500">
             <div className="text-red-600 text-6xl mb-4">⚠️</div>
             <h1 className="text-3xl font-bold text-gray-900 mb-6">
-              Direct Access Not Expected
+              Access Not Available
             </h1>
             
             <div className="text-left space-y-4 mb-8">
               <p className="text-lg text-gray-700">
-                You have accessed this survey directly, which is not the expected entry point.
+                This survey is not accessible through direct navigation.
               </p>
               
               <p className="text-lg text-gray-700">
-                This survey should be accessed through one of the following specific URLs:
+                Please use the survey link provided to you by the research team or survey administrator.
               </p>
               
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <ul className="space-y-2 text-blue-600 font-mono">
-                  <li>• <strong>/intent</strong> - For intent-based evaluation</li>
-                  <li>• <strong>/usefulness</strong> - For usefulness evaluation</li>
-                  <li>• <strong>/originality</strong> - For originality evaluation</li>
-                </ul>
-              </div>
-              
               <p className="text-lg text-gray-700">
-                Please contact the survey administrator or use the correct entry URL provided to you.
+                If you believe you have reached this page in error, please contact the survey administrator for assistance.
               </p>
             </div>
             
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-yellow-800 font-medium">
-                If you believe this is an error, please refresh the page or contact support.
-              </p>
-            </div>
           </div>
         </div>
       </div>
