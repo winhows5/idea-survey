@@ -73,7 +73,7 @@ export default function HomePage() {
                 Please use the survey link provided to you by the research team or survey administrator.
               </p>
               
-              <p className="text-lg text-gray-700">
+              <p className="text-sm text-gray-500 mt-6">
                 If you believe you have reached this page in error, please contact the survey administrator for assistance.
               </p>
             </div>
