@@ -29,6 +29,12 @@ const shuffleArray = (array: string[]) => {
 
 // Helper function to get or create randomized source order
 const getSourceOrder = () => {
+  // Check if we're in the browser environment
+  if (typeof window === 'undefined') {
+    console.log('Running on server, returning default SOURCES order');
+    return SOURCES; // Return default order on server
+  }
+  
   const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
   
   // If pageOrder doesn't exist or is empty, create a randomized order
@@ -285,10 +291,13 @@ export default function EvaluationPage() {
     <SurveyLayout title="Idea Evaluation" progress={progress}>
       <div className="space-y-6">
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-          <p className="text-blue-800 font-medium">
+          <p className="text-blue-800 font-medium text-lg">
             
-              Below are 10 new features proposed for <span className="font-bold text-red-600">{appName}</span>, the mobile app. Please evaluate each idea, and SELECT ALL that you think you would use in the app. Do NOT select any features that are already available in the app.
-            
+              Below are 10 new features proposed for <span className="font-bold text-red-600">{appName}</span>, the mobile app. Please evaluate each idea, and SELECT ALL that you think you would use in the app. 
+              
+          </p>
+          <p className="text-blue-800 font-medium text-lg">     
+            <span className="font-bold text-red-600">Do NOT select any features that are already available in the app.</span>
           </p>
         </div>
 
