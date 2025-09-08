@@ -74,15 +74,17 @@ export default function FamiliarityPage() {
     setSubmitting(true);
     
     try {
-      // Update survey state
-      const surveyState = {
+      // Get existing survey state and update it
+      const existingSurveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
+      const updatedSurveyState = {
+        ...existingSurveyState,
         selectedApps: selectedApps,
         evaluatedApp: selectedApps[Math.floor(Math.random() * selectedApps.length)],
         timestamp: new Date().toISOString()
       };
       
-      console.log('Storing survey state:', surveyState);
-      localStorage.setItem('surveyState', JSON.stringify(surveyState));
+      console.log('Storing survey state:', updatedSurveyState);
+      localStorage.setItem('surveyState', JSON.stringify(updatedSurveyState));
       
       // Small delay to ensure localStorage write completes
       setTimeout(() => {

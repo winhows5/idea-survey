@@ -24,11 +24,10 @@ export async function POST(request: NextRequest) {
       if (appId && frequencies[appId]) {
         // Convert frequency string to numeric value
         const frequencyMap: { [key: string]: number } = {
-          'never': 1,
-          'rarely': 2,
-          'sometimes': 3,
-          'often': 4,
-          'daily': 5
+          'yearly': 1,
+          'monthly': 2,
+          'weekly': 3,
+          'daily': 4
         };
         familiarityValue = frequencyMap[frequencies[appId]] || 0;
       }

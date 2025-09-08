@@ -287,7 +287,7 @@ export default function EvaluationPage() {
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
           <p className="text-blue-800 font-medium">
             
-              `Below are 10 new features proposed for <span className="font-bold text-red-600">${appName}</span>, the mobile app. Please evaluate each idea, and SELECT ALL that you think you would use in the app. Do NOT select any features that are already available in the app.`
+              Below are 10 new features proposed for <span className="font-bold text-red-600">{appName}</span>, the mobile app. Please evaluate each idea, and SELECT ALL that you think you would use in the app. Do NOT select any features that are already available in the app.
             
           </p>
         </div>
