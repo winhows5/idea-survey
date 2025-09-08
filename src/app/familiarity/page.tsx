@@ -97,7 +97,7 @@ export default function FamiliarityPage() {
 
   if (loading) {
     return (
-      <SurveyLayout title="App Familiarity Screening" progress={14}>
+      <SurveyLayout title="Loading" progress={14}>
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           <span className="ml-4 text-gray-600">Loading apps...</span>
@@ -107,10 +107,10 @@ export default function FamiliarityPage() {
   }
 
   return (
-    <SurveyLayout title="App Familiarity Screening" progress={14}>
+    <SurveyLayout title="" progress={14}>
       <div className="space-y-6">
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-          <p className="text-blue-800 font-medium">
+          <p className="text-blue-800 font-medium text-lg">
             Please select ALL the mobile apps below that you use or have used before.
           </p>
         </div>

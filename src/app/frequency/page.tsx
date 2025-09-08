@@ -24,11 +24,10 @@ export default function FrequencyPage() {
   const [debugInfo, setDebugInfo] = useState('');
 
   const frequencyOptions = [
-    { value: 'never', label: 'Never' },
-    { value: 'rarely', label: 'Rarely (less than once a month)' },
-    { value: 'sometimes', label: 'Sometimes (1-3 times a month)' },
-    { value: 'often', label: 'Often (1-3 times a week)' },
-    { value: 'daily', label: 'Daily or almost daily' }
+    { value: 'daily', label: 'Daily (at least once a day)' },
+    { value: 'weekly', label: 'Weekly (at least once a week, but not daily)' },
+    { value: 'monthly', label: 'Monthly (at least once a month, but not weekly)' },
+    { value: 'yearly', label: 'Yearly or less (a few times a year or less often)' }
   ];
 
   useEffect(() => {
@@ -154,18 +153,18 @@ export default function FrequencyPage() {
   }
 
   return (
-    <SurveyLayout title="Usage Frequency & Participant Information" progress={28}>
-      <div className="space-y-6">
+    <SurveyLayout title="" progress={28}>
+      {/* <div className="space-y-6">
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
           <p className="text-blue-800 font-medium">
             Please provide your Prolific ID and indicate how frequently you use each of the apps you marked as familiar.
           </p>
-        </div>
+        </div> */}
 
         {/* Prolific ID Section */}
         <div className="space-y-3">
           <label htmlFor="prolificId" className="block text-lg font-medium text-gray-900">
-            Prolific ID *
+            Please enter your Prolific ID below: 
           </label>
           <input
             type="text"
@@ -190,10 +189,10 @@ export default function FrequencyPage() {
         {/* Usage Frequency Section */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-900">
-            Usage Frequency
+
           </h2>
           <p className="text-gray-600">
-            Please indicate how frequently you use this app:
+            Before we begin, please tell us about how often you use <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">{evaluatedApp?.app_name || 'the selected app'}</span>, the mobile app.
           </p>
           
           {errors.frequency && (
@@ -205,7 +204,7 @@ export default function FrequencyPage() {
           {!evaluatedApp ? (
             <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-yellow-800">
-                No app selected. Please go back to the familiarity page.
+                No app selected. Please go back to the previous page.
               </p>
             </div>
           ) : (
