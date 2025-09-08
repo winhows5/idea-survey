@@ -39,14 +39,18 @@ export default function HomePage() {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
-      <div className="max-w-2xl mx-auto text-center">
+      <div className="max-w-4xl mx-auto text-center">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
             Mobile App Feature Survey
           </h1>
           
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-            Thank you for participating in our survey! In this survey, you will see 4 groups of proposed new mobile app features. Your task is to help us evaluate these ideas based on your experience. Please note that some ideas may include features that the surveyed mobile app already offers. <span className="text-red-600 font-bold">If a feature already exists in the surveyed mobile app, please do not select it.</span>
+          <p className="text-lg text-gray-600 mb-4 leading-relaxed text-left">
+            Thank you for participating in our survey! In this survey, you will see 4 groups of proposed new mobile app features. Your task is to help us evaluate these ideas based on your experience. Please note that some ideas may include features that the surveyed mobile app already offers.
+          </p>
+          
+          <p className="text-lg text-red-600 font-bold mb-8 text-left">
+            If a feature already exists in the surveyed mobile app, please do not select it.
           </p>
           
           <button

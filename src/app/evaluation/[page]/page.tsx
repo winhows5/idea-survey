@@ -254,7 +254,7 @@ export default function EvaluationPage() {
 
   if (loading) {
     return (
-      <SurveyLayout title="Idea Evaluation" progress={progress}>
+      <SurveyLayout title="Loading" progress={progress}>
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           <span className="ml-4 text-gray-600">Loading ideas...</span>
@@ -265,7 +265,7 @@ export default function EvaluationPage() {
 
   if (error && ideas.length === 0) {
     return (
-      <SurveyLayout title="Idea Evaluation" progress={progress}>
+      <SurveyLayout title="" progress={progress}>
         <div className="text-center py-12">
           <div className="text-red-600 mb-4">{error}</div>
           <button
@@ -286,10 +286,9 @@ export default function EvaluationPage() {
       <div className="space-y-6">
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
           <p className="text-blue-800 font-medium">
-            {source === 'VALIDATION' 
-              ? 'Below are 10 new features proposed for mobile apps. Please evaluate each idea, and SELECT ALL that you think you would use in the app. Do NOT select any features that are already available in the app.'
-              : `Below are 10 new features proposed for ${appName}, the mobile app. Please evaluate each idea, and SELECT ALL that you think you would use in the app. Do NOT select any features that are already available in the app.`
-            }
+            
+              `Below are 10 new features proposed for <span className="font-bold text-red-600">${appName}</span>, the mobile app. Please evaluate each idea, and SELECT ALL that you think you would use in the app. Do NOT select any features that are already available in the app.`
+            
           </p>
         </div>
 
@@ -311,9 +310,9 @@ export default function EvaluationPage() {
                   className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded disabled:opacity-50"
                 />
                 <div className="flex-1">
-                  <h3 className="font-medium text-gray-900 mb-2">
+                  {/* <h3 className="font-medium text-gray-900 mb-2">
                     Feature {index + 1}
-                  </h3>
+                  </h3> */}
                   <p className="text-gray-700 leading-relaxed">{idea.text}</p>
                 </div>
               </label>
@@ -333,9 +332,9 @@ export default function EvaluationPage() {
                 <h3 className="font-medium text-gray-900">
                   None of the above
                 </h3>
-                <p className="text-gray-600 text-sm">
+                {/* <p className="text-gray-600 text-sm">
                   I would not use any of these features
-                </p>
+                </p> */}
               </div>
             </label>
           </div>

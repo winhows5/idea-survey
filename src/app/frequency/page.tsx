@@ -154,8 +154,8 @@ export default function FrequencyPage() {
 
   return (
     <SurveyLayout title="" progress={28}>
-      {/* <div className="space-y-6">
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+      <div className="space-y-6">
+        {/* <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
           <p className="text-blue-800 font-medium">
             Please provide your Prolific ID and indicate how frequently you use each of the apps you marked as familiar.
           </p>
@@ -192,7 +192,7 @@ export default function FrequencyPage() {
 
           </h2>
           <p className="text-gray-600">
-            Before we begin, please tell us about how often you use <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">{evaluatedApp?.app_name || 'the selected app'}</span>, the mobile app.
+            Before we begin, please tell us how often you use <span className="font-bold text-red-600">{evaluatedApp?.app_name || 'the selected app'}</span>, the mobile app.
           </p>
           
           {errors.frequency && (
@@ -210,7 +210,7 @@ export default function FrequencyPage() {
           ) : (
             <div className="border border-gray-200 rounded-lg p-4">
               <h3 className="font-medium text-gray-900 mb-3">{evaluatedApp.app_name}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-3">
                 {frequencyOptions.map((option) => (
                   <label
                     key={option.value}
