@@ -162,9 +162,26 @@ export default function CompletePage() {
         
         {redirecting && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center justify-center space-x-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-              <p className="text-blue-800">Redirecting you in a moment...</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                <p className="text-blue-800 font-medium">Redirecting automatically in a moment...</p>
+              </div>
+              
+              <div className="border-t border-blue-200 pt-3">
+                <p className="text-blue-700 text-sm mb-3">
+                  <strong>Important:</strong> Your submission will be rewarded only if you complete the redirect process.
+                </p>
+                <button
+                  onClick={() => {
+                    const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
+                    window.location.href = redirectUrl;
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  Click here to redirect manually
+                </button>
+              </div>
             </div>
           </div>
         )}
