@@ -10,15 +10,41 @@ export default function CompletePage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [responseId, setResponseId] = useState('');
+  const [surveyType, setSurveyType] = useState('');
+  const [redirecting, setRedirecting] = useState(false);
   const hasAttemptedSubmission = useRef(false);
 
+  // Redirect URLs based on survey type
+  const redirectUrls = {
+    intent: 'https://app.prolific.com/submissions/complete?cc=C18WUNLX',
+    usefulness: 'https://app.prolific.com',
+    originality: 'https://app.prolific.com'
+  };
+
   useEffect(() => {
+    // Get survey type from localStorage
+    const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
+    setSurveyType(surveyState.surveyType || 'intent');
+    
     // Only submit once when component mounts
     if (!hasAttemptedSubmission.current) {
       hasAttemptedSubmission.current = true;
       submitSurveyData();
     }
   }, []); // Empty dependency array - only run once on mount
+
+  useEffect(() => {
+    // Start redirect timer after successful submission
+    if (submitted && !redirecting) {
+      setRedirecting(true);
+      const timer = setTimeout(() => {
+        const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
+        window.location.href = redirectUrl;
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, surveyType, redirecting]);
 
   const submitSurveyData = async () => {
     // Prevent multiple simultaneous submissions
@@ -131,6 +157,15 @@ export default function CompletePage() {
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
             <p className="text-green-800 font-medium">Response ID:</p>
             <p className="text-green-700 font-mono text-sm">{responseId}</p>
+          </div>
+        )}
+        
+        {redirecting && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+              <p className="text-blue-800">Redirecting you in a moment...</p>
+            </div>
           </div>
         )}
         
