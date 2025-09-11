@@ -35,7 +35,7 @@ export default function CompletePage() {
 
   useEffect(() => {
     // Start redirect timer after successful submission
-    if (submitted && surveyType && !redirecting) {
+    if (submitted && surveyType) {
       console.log('Starting redirect for survey type:', surveyType);
       setRedirecting(true);
       
@@ -52,7 +52,7 @@ export default function CompletePage() {
         clearTimeout(timer);
       };
     }
-  }, [submitted, surveyType, redirecting, redirectUrls]);
+  }, [submitted, surveyType]); // Removed redirectUrls and redirecting from dependencies
 
   const submitSurveyData = async () => {
     // Prevent multiple simultaneous submissions
