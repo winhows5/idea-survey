@@ -35,16 +35,24 @@ export default function CompletePage() {
 
   useEffect(() => {
     // Start redirect timer after successful submission
-    if (submitted && !redirecting) {
+    if (submitted && surveyType && !redirecting) {
+      console.log('Starting redirect for survey type:', surveyType);
       setRedirecting(true);
+      
+      const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
+      console.log('Redirect URL:', redirectUrl);
+      
       const timer = setTimeout(() => {
-        const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
+        console.log('Executing redirect to:', redirectUrl);
         window.location.href = redirectUrl;
       }, 1000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        console.log('Cleaning up redirect timer');
+        clearTimeout(timer);
+      };
     }
-  }, [submitted, surveyType, redirecting]);
+  }, [submitted, surveyType, redirecting, redirectUrls]);
 
   const submitSurveyData = async () => {
     // Prevent multiple simultaneous submissions
@@ -58,6 +66,7 @@ export default function CompletePage() {
       
       // Get all survey data from localStorage
       const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
+      console.log('Survey state:', surveyState);
       
       // Add start time if not present
       if (!surveyState.startTime) {
@@ -74,10 +83,12 @@ export default function CompletePage() {
       });
       
       const result = await response.json();
+      console.log('Submit result:', result);
       
       if (result.success) {
         setResponseId(result.responseId);
         setSubmitted(true);
+        console.log('Submission successful, setting submitted to true');
         // Clear localStorage after successful submission
         localStorage.removeItem('surveyState');
       } else {
@@ -98,9 +109,10 @@ export default function CompletePage() {
     submitSurveyData();
   };
 
-  const handleRestart = () => {
-    localStorage.removeItem('surveyState');
-    router.push('/');
+  const handleManualRedirect = () => {
+    const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
+    console.log('Manual redirect to:', redirectUrl);
+    window.location.href = redirectUrl;
   };
 
   if (submitting) {
@@ -125,20 +137,12 @@ export default function CompletePage() {
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
             <p className="text-red-700">{error}</p>
           </div>
-          <div className="space-x-4">
-            <button
-              onClick={handleRetry}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Try Again
-            </button>
-            <button
-              onClick={handleRestart}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Restart Survey
-            </button>
-          </div>
+          <button
+            onClick={handleRetry}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Try Again
+          </button>
         </div>
       </SurveyLayout>
     );
@@ -160,23 +164,19 @@ export default function CompletePage() {
           </div>
         )}
         
-        {redirecting && (
+        {submitted && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="space-y-3">
               <div className="flex items-center justify-center space-x-2">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                <p className="text-blue-800 font-medium">Redirecting automatically in a moment...</p>
+                <p className="text-blue-800 font-medium">
+                  {redirecting ? 'Redirecting automatically in a moment...' : 'Preparing redirect...'}
+                </p>
               </div>
               
               <div className="border-t border-blue-200 pt-3">
-                <p className="text-blue-700 text-sm mb-3">
-                  <strong>Important:</strong> Your submission will be rewarded only if you complete the redirect process.
-                </p>
                 <button
-                  onClick={() => {
-                    const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
-                    window.location.href = redirectUrl;
-                  }}
+                  onClick={handleManualRedirect}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                 >
                   Click here to redirect manually
@@ -187,7 +187,7 @@ export default function CompletePage() {
         )}
         
         <p className="text-gray-500">
-          Thank you for your participation in our research. You can now close this window.
+          Thank you for your participation in our research.
         </p>
       </div>
     </SurveyLayout>
