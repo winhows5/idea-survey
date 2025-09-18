@@ -18,7 +18,34 @@ export default function CompletePage() {
   const redirectUrls = {
     intent: 'https://app.prolific.com/submissions/complete?cc=C18WUNLX',
     usefulness: 'https://app.prolific.com',
-    originality: 'https://app.prolific.com'
+    originality: 'https://app.prolific.com',
+    intent_student: 'https://smeal.qualtrics.com/jfe/form/SV_85FcguoLuL36f3v',
+    usefulness_student: 'https://smeal.qualtrics.com/jfe/form/SV_85FcguoLuL36f3v',
+    originality_student: 'https://smeal.qualtrics.com/jfe/form/SV_85FcguoLuL36f3v'
+  };
+
+  // Function to log errors to server
+  const logToServer = async (logData: {
+    type: string;
+    message: string;
+    surveyType?: string;
+    redirectUrl?: string;
+    error?: string;
+    stack?: string;
+  }) => {
+    try {
+      await fetch('/api/logs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(logData),
+      });
+    } catch (serverLogError) {
+      // Fallback to console if server logging fails
+      console.error('Failed to log to server:', serverLogError);
+      console.error('Original log data:', logData);
+    }
   };
 
   useEffect(() => {
@@ -42,9 +69,39 @@ export default function CompletePage() {
       const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
       console.log('Redirect URL:', redirectUrl);
       
-      const timer = setTimeout(() => {
-        console.log('Executing redirect to:', redirectUrl);
-        window.location.href = redirectUrl;
+      const timer = setTimeout(async () => {
+        try {
+          console.log('Executing redirect to:', redirectUrl);
+          window.location.href = redirectUrl;
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown redirect error';
+          
+          // Log to server instead of just console
+          await logToServer({
+            type: 'redirect_error',
+            message: 'Automatic redirect failed',
+            surveyType,
+            redirectUrl,
+            error: errorMessage,
+            stack: error instanceof Error ? error.stack : undefined
+          });
+          
+          // Try fallback redirect method
+          try {
+            window.open(redirectUrl, '_self');
+          } catch (fallbackError) {
+            const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error';
+            
+            await logToServer({
+              type: 'redirect_fallback_error',
+              message: 'Fallback redirect also failed',
+              surveyType,
+              redirectUrl,
+              error: fallbackErrorMessage,
+              stack: fallbackError instanceof Error ? fallbackError.stack : undefined
+            });
+          }
+        }
       }, 1000);
 
       return () => {
@@ -109,10 +166,43 @@ export default function CompletePage() {
     submitSurveyData();
   };
 
-  const handleManualRedirect = () => {
+  const handleManualRedirect = async () => {
     const redirectUrl = redirectUrls[surveyType as keyof typeof redirectUrls] || redirectUrls.intent;
     console.log('Manual redirect to:', redirectUrl);
-    window.location.href = redirectUrl;
+    
+    try {
+      window.location.href = redirectUrl;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown manual redirect error';
+      
+      // Log to server
+      await logToServer({
+        type: 'manual_redirect_error',
+        message: 'Manual redirect failed',
+        surveyType,
+        redirectUrl,
+        error: errorMessage,
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
+      // Try fallback method
+      try {
+        window.open(redirectUrl, '_self');
+      } catch (fallbackError) {
+        const fallbackErrorMessage = fallbackError instanceof Error ? fallbackError.message : 'Unknown manual fallback error';
+        
+        await logToServer({
+          type: 'manual_redirect_fallback_error',
+          message: 'Manual fallback redirect also failed',
+          surveyType,
+          redirectUrl,
+          error: fallbackErrorMessage,
+          stack: fallbackError instanceof Error ? fallbackError.stack : undefined
+        });
+        
+        alert('Redirect failed. Please manually navigate to: ' + redirectUrl);
+      }
+    }
   };
 
   if (submitting) {

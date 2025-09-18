@@ -22,6 +22,7 @@ export default function FrequencyPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<{prolificId?: string; frequency?: string}>({});
   const [debugInfo, setDebugInfo] = useState('');
+  const [surveyType, setSurveyType] = useState('');
 
   const frequencyOptions = [
     { value: 'daily', label: 'Daily (at least once a day)' },
@@ -30,10 +31,16 @@ export default function FrequencyPage() {
     { value: 'yearly', label: 'Yearly or less (a few times a year or less often)' }
   ];
 
+  // Check if current survey type is a student survey
+  const isStudentSurvey = surveyType.includes('_student');
+
   useEffect(() => {
     // Get familiar apps from localStorage (set by familiarity page)
     const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
     const selectedAppIds = surveyState.selectedApps || [];
+    
+    // Set survey type
+    setSurveyType(surveyState.surveyType || 'intent');
     
     // Debug info
     setDebugInfo(`Survey state: ${JSON.stringify(surveyState)}, Selected apps: ${selectedAppIds.length}`);
@@ -100,11 +107,13 @@ export default function FrequencyPage() {
   const validateForm = (): boolean => {
     const newErrors: {prolificId?: string; frequency?: string} = {};
     
-    // Validate Prolific ID
-    if (!prolificId.trim()) {
-      newErrors.prolificId = 'Prolific ID is required';
-    } else if (prolificId.trim().length < 3) {
-      newErrors.prolificId = 'Prolific ID must be at least 3 characters';
+    // Only validate Prolific ID for non-student surveys
+    if (!isStudentSurvey) {
+      if (!prolificId.trim()) {
+        newErrors.prolificId = 'Prolific ID is required';
+      } else if (prolificId.trim().length < 3) {
+        newErrors.prolificId = 'Prolific ID must be at least 3 characters';
+      }
     }
     
     // Validate frequency is selected
@@ -126,7 +135,14 @@ export default function FrequencyPage() {
     try {
       // Update survey state with frequency data
       const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
-      surveyState.prolificId = prolificId.trim();
+      
+      // Only set prolificId for non-student surveys
+      if (!isStudentSurvey) {
+        surveyState.prolificId = prolificId.trim();
+      } else {
+        surveyState.prolificId = 'N/A'; // Set a default value for student surveys
+      }
+      
       surveyState.frequencies = { [evaluatedApp!.app_id]: frequency };
       surveyState.timestamp = new Date().toISOString();
       
@@ -155,36 +171,32 @@ export default function FrequencyPage() {
   return (
     <SurveyLayout title="" progress={28}>
       <div className="space-y-6">
-        {/* <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-          <p className="text-blue-800 font-medium">
-            Please provide your Prolific ID and indicate how frequently you use each of the apps you marked as familiar.
-          </p>
-        </div> */}
-
-        {/* Prolific ID Section */}
-        <div className="space-y-3">
-          <label htmlFor="prolificId" className="block text-lg font-medium text-gray-900">
-            Please enter your Prolific ID below: 
-          </label>
-          <input
-            type="text"
-            id="prolificId"
-            value={prolificId}
-            onChange={(e) => {
-              setProlificId(e.target.value);
-              if (errors.prolificId) {
-                setErrors(prev => ({ ...prev, prolificId: undefined }));
-              }
-            }}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.prolificId ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="Enter your Prolific ID"
-          />
-          {errors.prolificId && (
-            <p className="text-sm text-red-600">{errors.prolificId}</p>
-          )}
-        </div>
+        {/* Prolific ID Section - Only show for non-student surveys */}
+        {!isStudentSurvey && (
+          <div className="space-y-3">
+            <label htmlFor="prolificId" className="block text-lg font-medium text-gray-900">
+              Please enter your Prolific ID below: 
+            </label>
+            <input
+              type="text"
+              id="prolificId"
+              value={prolificId}
+              onChange={(e) => {
+                setProlificId(e.target.value);
+                if (errors.prolificId) {
+                  setErrors(prev => ({ ...prev, prolificId: undefined }));
+                }
+              }}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                errors.prolificId ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter your Prolific ID"
+            />
+            {errors.prolificId && (
+              <p className="text-sm text-red-600">{errors.prolificId}</p>
+            )}
+          </div>
+        )}
 
         {/* Usage Frequency Section */}
         <div className="space-y-4">

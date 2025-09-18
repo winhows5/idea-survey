@@ -52,6 +52,15 @@ export async function saveSurveyResponseByType(data: any, surveyType: string) {
       case 'originality':
         tableName = 'survey_originality';
         break;
+      case 'intent_student':
+        tableName = 'survey_intent_student';
+        break;
+      case 'usefulness_student':
+        tableName = 'survey_usefulness_student';
+        break;
+      case 'originality_student':
+        tableName = 'survey_originality_student';
+        break;
       default:
         tableName = 'survey_responses'; // fallback to original table
     }

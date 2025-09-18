@@ -14,7 +14,7 @@ export default function HomePage() {
   useEffect(() => {
     // Get survey type from URL parameters
     const typeParam = searchParams.get('type');
-    if (typeParam && ['intent', 'usefulness', 'originality'].includes(typeParam)) {
+    if (typeParam && ['intent', 'usefulness', 'originality', 'intent_student', 'usefulness_student', 'originality_student'].includes(typeParam)) {
       setSurveyType(typeParam);
       setIsDirectVisit(false);
     } else {

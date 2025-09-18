@@ -69,3 +69,72 @@ CREATE TABLE IF NOT EXISTS survey_originality (
   INDEX idx_response_id (ResponseId),
   INDEX idx_finished (Finished)
 );
+
+-- Survey Intent Student Table
+CREATE TABLE IF NOT EXISTS survey_intent_student (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  StartDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  EndDate TIMESTAMP NULL,
+  Progress INT DEFAULT 0,
+  Duration INT DEFAULT 0,
+  Finished TINYINT DEFAULT 0,
+  RecordedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ResponseId VARCHAR(36) UNIQUE NOT NULL,
+  app_id_selected TEXT,
+  app_id_evaluated VARCHAR(255),
+  prolific_id VARCHAR(255),
+  familiarity INT DEFAULT 0,
+  DBGNN TEXT,
+  UFGC TEXT,
+  COT TEXT,
+  ZERO TEXT,
+  Validation TEXT,
+  INDEX idx_response_id (ResponseId),
+  INDEX idx_finished (Finished)
+);
+
+-- Survey Usefulness Student Table
+CREATE TABLE IF NOT EXISTS survey_usefulness_student (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  StartDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  EndDate TIMESTAMP NULL,
+  Progress INT DEFAULT 0,
+  Duration INT DEFAULT 0,
+  Finished TINYINT DEFAULT 0,
+  RecordedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ResponseId VARCHAR(36) UNIQUE NOT NULL,
+  app_id_selected TEXT,
+  app_id_evaluated VARCHAR(255),
+  prolific_id VARCHAR(255),
+  familiarity INT DEFAULT 0,
+  DBGNN TEXT,
+  UFGC TEXT,
+  COT TEXT,
+  ZERO TEXT,
+  Validation TEXT,
+  INDEX idx_response_id (ResponseId),
+  INDEX idx_finished (Finished)
+);
+
+-- Survey Originality Student Table
+CREATE TABLE IF NOT EXISTS survey_originality_student (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  StartDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  EndDate TIMESTAMP NULL,
+  Progress INT DEFAULT 0,
+  Duration INT DEFAULT 0,
+  Finished TINYINT DEFAULT 0,
+  RecordedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ResponseId VARCHAR(36) UNIQUE NOT NULL,
+  app_id_selected TEXT,
+  app_id_evaluated VARCHAR(255),
+  prolific_id VARCHAR(255),
+  familiarity INT DEFAULT 0,
+  DBGNN TEXT,
+  UFGC TEXT,
+  COT TEXT,
+  ZERO TEXT,
+  Validation TEXT,
+  INDEX idx_response_id (ResponseId),
+  INDEX idx_finished (Finished)
+);
