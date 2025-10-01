@@ -124,12 +124,7 @@ export default function CompletePage() {
       // Get all survey data from localStorage
       const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
       console.log('Survey state:', surveyState);
-      
-      // Add start time if not present
-      if (!surveyState.startTime) {
-        surveyState.startTime = new Date().toISOString();
-      }
-      
+           
       // Submit to API
       const response = await fetch('/api/submit', {
         method: 'POST',

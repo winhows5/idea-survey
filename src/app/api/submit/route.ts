@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
     const surveyType = surveyData.surveyType || 'intent'; // default to intent
     
     // Calculate duration
-    const startTime = new Date(surveyData.startDate || surveyData.startTime);
+    const startTime = surveyData.startDate ? new Date(surveyData.startDate) : new Date();
     const endTime = new Date();
-    const duration = Math.round((endTime.getTime() - startTime.getTime()) / 1000); // in seconds
+    const duration = Math.round((endTime.getTime() - startTime.getTime()) / 1000);
     
     // Extract familiarity as INT from frequencies object
     let familiarityValue = 0;
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     // Prepare data for database with proper fallbacks
     const dbData = {
       ResponseId: responseId,
-      StartDate: surveyData.startDate || surveyData.startTime || new Date().toISOString(),
+      StartDate: surveyData.startDate,
       EndDate: endTime.toISOString(),
       Progress: 100,
       Duration: duration,
