@@ -114,7 +114,7 @@ export default function SelectPage() {
       <div className="space-y-6">
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
           <p className="text-blue-800 font-medium text-lg">
-            Please select ALL the mobile apps below that you use or have used before.
+            Please select ALL the mobile apps below that you currently use or have used within the past 6 months.
           </p>
         </div>
 

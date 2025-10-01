@@ -123,7 +123,7 @@ The application stores survey responses in a MySQL table with fields for:
 - Response ID and timestamps
 - User demographics (Prolific ID)
 - App familiarity and usage frequency
-- Evaluation data for each source (DBGNN, UFGC, COT, ZERO, VALIDATION)
+- Evaluation data for each source.
 
 For detailed database structure, refer to `schema/schema.sql`.
 

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS IDEA_DB;
-USE IDEA_DB;
+CREATE DATABASE IF NOT EXISTS IDEA_DB_V2;
+USE IDEA_DB_V2;
 
 -- Survey Intent Table
 CREATE TABLE IF NOT EXISTS survey_intent (
@@ -16,10 +16,12 @@ CREATE TABLE IF NOT EXISTS survey_intent (
   prolific_id VARCHAR(255),
   familiarity INT DEFAULT 0,
   DBGNN TEXT,
-  UFGC TEXT,
-  COT TEXT,
-  ZERO TEXT,
+  Claude TEXT,
+  GPT5 TEXT,
+  Gemini TEXT,
+  LLManalogy TEXT,
   Validation TEXT,
+  deleted TINYINT DEFAULT 0,
   INDEX idx_response_id (ResponseId),
   INDEX idx_finished (Finished)
 );
@@ -39,10 +41,12 @@ CREATE TABLE IF NOT EXISTS survey_usefulness (
   prolific_id VARCHAR(255),
   familiarity INT DEFAULT 0,
   DBGNN TEXT,
-  UFGC TEXT,
-  COT TEXT,
-  ZERO TEXT,
+  Claude TEXT,
+  GPT5 TEXT,
+  Gemini TEXT,
+  LLManalogy TEXT,
   Validation TEXT,
+  deleted TINYINT DEFAULT 0,
   INDEX idx_response_id (ResponseId),
   INDEX idx_finished (Finished)
 );
@@ -62,10 +66,12 @@ CREATE TABLE IF NOT EXISTS survey_originality (
   prolific_id VARCHAR(255),
   familiarity INT DEFAULT 0,
   DBGNN TEXT,
-  UFGC TEXT,
-  COT TEXT,
-  ZERO TEXT,
+  Claude TEXT,
+  GPT5 TEXT,
+  Gemini TEXT,
+  LLManalogy TEXT,
   Validation TEXT,
+  deleted TINYINT DEFAULT 0,
   INDEX idx_response_id (ResponseId),
   INDEX idx_finished (Finished)
 );
@@ -85,10 +91,12 @@ CREATE TABLE IF NOT EXISTS survey_intent_student (
   prolific_id VARCHAR(255),
   familiarity INT DEFAULT 0,
   DBGNN TEXT,
-  UFGC TEXT,
-  COT TEXT,
-  ZERO TEXT,
+  Claude TEXT,
+  GPT5 TEXT,
+  Gemini TEXT,
+  LLManalogy TEXT,
   Validation TEXT,
+  deleted TINYINT DEFAULT 0,
   INDEX idx_response_id (ResponseId),
   INDEX idx_finished (Finished)
 );
@@ -108,10 +116,12 @@ CREATE TABLE IF NOT EXISTS survey_usefulness_student (
   prolific_id VARCHAR(255),
   familiarity INT DEFAULT 0,
   DBGNN TEXT,
-  UFGC TEXT,
-  COT TEXT,
-  ZERO TEXT,
+  Claude TEXT,
+  GPT5 TEXT,
+  Gemini TEXT,
+  LLManalogy TEXT,
   Validation TEXT,
+  deleted TINYINT DEFAULT 0,
   INDEX idx_response_id (ResponseId),
   INDEX idx_finished (Finished)
 );
@@ -131,10 +141,12 @@ CREATE TABLE IF NOT EXISTS survey_originality_student (
   prolific_id VARCHAR(255),
   familiarity INT DEFAULT 0,
   DBGNN TEXT,
-  UFGC TEXT,
-  COT TEXT,
-  ZERO TEXT,
+  Claude TEXT,
+  GPT5 TEXT,
+  Gemini TEXT,
+  LLManalogy TEXT,
   Validation TEXT,
+  deleted TINYINT DEFAULT 0,
   INDEX idx_response_id (ResponseId),
   INDEX idx_finished (Finished)
 );
