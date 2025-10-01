@@ -15,7 +15,8 @@ interface Selections {
 }
 
 const SOURCES = ['DBGNN', 'Claude', 'GPT5', 'Gemini', 'LLManalogy', 'VALIDATION'];
-const PROGRESS_VALUES = [42, 56, 70, 84, 92, 100];
+const NON_VALIDATION_SOURCES = ['DBGNN', 'Claude', 'GPT5', 'Gemini', 'LLManalogy'];
+const PROGRESS_VALUES = [56, 70, 84, 100];
 
 // Helper function to shuffle array
 const shuffleArray = (array: string[]) => {
@@ -27,22 +28,32 @@ const shuffleArray = (array: string[]) => {
   return shuffled;
 };
 
-// Helper function to get or create randomized source order
+// Helper function to get or create randomized source order (3 random + validation)
 const getSourceOrder = () => {
   // Check if we're in the browser environment
   if (typeof window === 'undefined') {
     console.log('Running on server, returning default SOURCES order');
-    return SOURCES; // Return default order on server
+    return ['DBGNN', 'Claude', 'GPT5', 'VALIDATION']; // Return default order on server
   }
   
   const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
   
   // If pageOrder doesn't exist or is empty, create a randomized order
   if (!surveyState.pageOrder || surveyState.pageOrder.length === 0) {
-    const randomizedSources = shuffleArray(SOURCES);
-    surveyState.pageOrder = randomizedSources;
+    // Randomly select 3 sources from non-validation sources
+    const shuffledNonValidation = shuffleArray(NON_VALIDATION_SOURCES);
+    const selectedSources = shuffledNonValidation.slice(0, 3);
+    
+    // Add validation source and shuffle the final order
+    const finalSources = shuffleArray([...selectedSources, 'VALIDATION']);
+    
+    // Store both the page order and which sources were selected/unselected
+    surveyState.pageOrder = finalSources;
+    surveyState.selectedSources = finalSources;
+    surveyState.unselectedSources = NON_VALIDATION_SOURCES.filter(source => !selectedSources.includes(source));
+    
     localStorage.setItem('surveyState', JSON.stringify(surveyState));
-    return randomizedSources;
+    return finalSources;
   }
   
   return surveyState.pageOrder;
@@ -243,12 +254,12 @@ export default function EvaluationPage() {
       // Update evaluations for this source
       if (!surveyState.evaluations) {
         surveyState.evaluations = {
-          DBGNN: [],
-          Claude: [],
-          GPT5: [],
-          Gemini: [],
-          LLManalogy: [],
-          VALIDATION: [],
+          DBGNN: [-1],
+          Claude: [-1],
+          GPT5: [-1],
+          Gemini: [-1],
+          LLManalogy: [-1],
+          VALIDATION: [-1],
           DBGNN_none: false,
           Claude_none: false,
           GPT5_none: false,
@@ -263,13 +274,19 @@ export default function EvaluationPage() {
       surveyState.evaluations[source + '_none'] = noneSelected;
       surveyState.timestamp = new Date().toISOString();
       
-      localStorage.setItem('surveyState', JSON.stringify(surveyState));
-      
       // Navigate to next page or completion
-      if (pageNumber < 6) {
+      if (pageNumber < 4) {
+        localStorage.setItem('surveyState', JSON.stringify(surveyState));
         router.push(`/evaluation/${pageNumber + 1}`);
       } else {
-        // All evaluations complete, go to completion page
+        // All evaluations complete, set [-1] for unselected sources
+        const unselectedSources = surveyState.unselectedSources || [];
+        unselectedSources.forEach((unselectedSource: string) => {
+          surveyState.evaluations[unselectedSource] = [-1];
+          surveyState.evaluations[unselectedSource + '_none'] = false;
+        });
+        
+        localStorage.setItem('surveyState', JSON.stringify(surveyState));
         router.push('/complete');
       }
       
@@ -397,7 +414,7 @@ export default function EvaluationPage() {
             disabled={submitting}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {submitting ? 'Saving...' : (pageNumber < 6 ? 'Next Page' : 'Complete Survey')}
+            {submitting ? 'Saving...' : (pageNumber < 4 ? 'Next Page' : 'Complete Survey')}
           </button>
         </div>
       </div>

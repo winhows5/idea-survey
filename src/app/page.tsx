@@ -23,10 +23,7 @@ export default function HomePage() {
     }
   }, [searchParams]);
   
-  const handleStartSurvey = () => {
-    setIsStarting(true);
-    
-    // Generate unique response ID and store start time
+  const handleStart = (surveyType: string) => {
     const responseId = uuidv4();
     const startDate = new Date().toISOString();
     
@@ -52,6 +49,11 @@ export default function HomePage() {
     }));
     
     router.push('/select');
+  };
+
+  const handleStartSurvey = () => {
+    setIsStarting(true);
+    handleStart(surveyType);
   };
 
   // Show warning message for direct visits
