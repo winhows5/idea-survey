@@ -34,11 +34,6 @@ export async function loadCSVData(): Promise<AppData[]> {
 
 export async function getUniqueApps(): Promise<{app_id: string, app_name: string}[]> {
   const data = await loadCSVData();
-  // Log the first few rows to see the structure
-  console.log('First 10 app_id values:');
-  data.slice(0, 1).forEach((row, index) => {
-    console.log(`Row ${index}: app_id = ${row.app_id}, app_name = ${row.app_name}`);
-  });
   const uniqueApps = new Map<string, string>();
   
   data.forEach(row => {

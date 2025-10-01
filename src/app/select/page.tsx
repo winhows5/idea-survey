@@ -20,16 +20,12 @@ export default function SelectPage() {
   const loadRandomApps = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/apps');
+      // Request 20 random apps from the backend
+      const response = await fetch('/api/apps?random=true&count=20');
       const data = await response.json();
 
       if (data.success) {
-        // Filter out apps with app_id "NA" before randomizing
-        const allApps = data.apps.filter((app: App) => app.app_id !== "NA");
-        // Randomly select 20 apps from valid apps
-        const shuffled = [...allApps].sort(() => Math.random() - 0.5);
-        const randomApps = shuffled.slice(0, 20);
-        setApps(randomApps);
+        setApps(data.apps);
       } else {
         console.error('Failed to load apps:', data.error);
       }
