@@ -405,7 +405,7 @@ export default function EvaluationPage() {
           
           <div className="text-center">
             <div className="text-sm text-gray-500 mb-2">
-              Page {pageNumber} of 5 • {noneSelected ? 'None selected' : `${selectedCount} feature${selectedCount !== 1 ? 's' : ''} selected`}
+              Page {pageNumber} of 4 • {noneSelected ? 'None selected' : `${selectedCount} feature${selectedCount !== 1 ? 's' : ''} selected`}
             </div>
           </div>
           
