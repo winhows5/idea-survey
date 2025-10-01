@@ -15,7 +15,7 @@ interface Selections {
 }
 
 const SOURCES = ['DBGNN', 'Claude', 'GPT5', 'Gemini', 'LLManalogy', 'VALIDATION'];
-const PROGRESS_VALUES = [42, 56, 70, 84, 100];
+const PROGRESS_VALUES = [42, 56, 70, 84, 92, 100];
 
 // Helper function to shuffle array
 const shuffleArray = (array: string[]) => {
@@ -88,6 +88,11 @@ export default function EvaluationPage() {
         return <>{baseText} you would use in the app.</>;
     }
   };
+
+  // Log current source when page changes
+  useEffect(() => {
+    console.log(`Current evaluation source: ${source} (Page ${pageNumber})`);
+  }, [source, pageNumber]);
 
   useEffect(() => {
     loadIdeas();
@@ -261,7 +266,7 @@ export default function EvaluationPage() {
       localStorage.setItem('surveyState', JSON.stringify(surveyState));
       
       // Navigate to next page or completion
-      if (pageNumber < 5) {
+      if (pageNumber < 6) {
         router.push(`/evaluation/${pageNumber + 1}`);
       } else {
         // All evaluations complete, go to completion page
@@ -392,7 +397,7 @@ export default function EvaluationPage() {
             disabled={submitting}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {submitting ? 'Saving...' : (pageNumber < 5 ? 'Next Page' : 'Complete Survey')}
+            {submitting ? 'Saving...' : (pageNumber < 6 ? 'Next Page' : 'Complete Survey')}
           </button>
         </div>
       </div>
