@@ -73,9 +73,14 @@ export default function SelectPage() {
     try {
       // Get existing survey state and update it
       const existingSurveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
+      
+      // Get full app objects for selected apps
+      const selectedAppObjects = apps.filter(app => selectedApps.includes(app.app_id));
+      
       const updatedSurveyState = {
         ...existingSurveyState,
-        selectedApps: selectedApps,
+        selectedApps: selectedApps, // Keep array of IDs for backward compatibility
+        selectedAppObjects: selectedAppObjects, // Store full app objects
         evaluatedApp: selectedApps[Math.floor(Math.random() * selectedApps.length)],
         timestamp: new Date().toISOString()
       };

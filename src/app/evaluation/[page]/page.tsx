@@ -117,6 +117,7 @@ export default function EvaluationPage() {
       // Get survey state
       const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
       const appId = surveyState.evaluatedApp;
+      const selectedAppObjects = surveyState.selectedAppObjects || [];
       
       // Set survey type from survey state
       setSurveyType(surveyState.surveyType || 'intent');
@@ -128,14 +129,13 @@ export default function EvaluationPage() {
       
       setEvaluatedApp(appId);
       
-      // Get app name from API
-      if (appId) {
-        const appsResponse = await fetch('/api/apps');
-        const appsData = await appsResponse.json();
-        if (appsData.success) {
-          const app = appsData.apps.find((a: any) => a.app_id === appId);
-          setAppName(app?.app_name || appId);
-        }
+      // Get app name from stored app objects instead of API call
+      if (appId && selectedAppObjects.length > 0) {
+        const app = selectedAppObjects.find((a: any) => a.app_id === appId);
+        setAppName(app?.app_name || appId);
+      } else if (appId) {
+        // Fallback: if selectedAppObjects not available, use appId as name
+        setAppName(appId);
       }
       
       // Fetch ideas from API

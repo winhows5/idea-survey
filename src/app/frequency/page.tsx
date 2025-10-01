@@ -35,9 +35,10 @@ export default function FrequencyPage() {
   const isStudentSurvey = surveyType.includes('_student');
 
   useEffect(() => {
-    // Get familiar apps from localStorage (set by familiarity page)
+    // Get familiar apps from localStorage (set by select page)
     const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
     const selectedAppIds = surveyState.selectedApps || [];
+    const selectedAppObjects = surveyState.selectedAppObjects || [];
     
     // Set survey type
     setSurveyType(surveyState.surveyType || 'intent');
@@ -47,49 +48,37 @@ export default function FrequencyPage() {
     console.log('Survey state from localStorage:', surveyState);
     console.log('Selected app IDs:', selectedAppIds);
     
-    if (selectedAppIds.length === 0) {
+    if (selectedAppIds.length === 0 || selectedAppObjects.length === 0) {
       // If no familiar apps, redirect back to select page
       console.log('No selected apps found, redirecting to select page');
       router.push('/select');
       return;
     }
 
-    // Load app details for familiar apps from API
-    loadFamiliarApps(selectedAppIds);
+    // Use stored app objects directly
+    selectRandomAppFromStored(selectedAppObjects);
   }, [router]);
 
-  const loadFamiliarApps = async (appIds: string[]) => {
+  const selectRandomAppFromStored = (familiarApps: App[]) => {
     try {
       setLoading(true);
-      console.log('Loading familiar apps for IDs:', appIds);
+      console.log('Using stored familiar apps:', familiarApps);
       
-      // Fetch all apps from API
-      const response = await fetch('/api/apps');
-      const data = await response.json();
+      // Randomly choose one familiar app for evaluation
+      const randomIndex = Math.floor(Math.random() * familiarApps.length);
+      const selectedApp = familiarApps[randomIndex];
+      console.log('Randomly selected app for evaluation:', selectedApp);
       
-      console.log('API response:', data);
+      // Update survey state with the randomly selected app
+      const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
+      surveyState.evaluatedApp = selectedApp.app_id;
+      localStorage.setItem('surveyState', JSON.stringify(surveyState));
       
-      if (data.success) {
-        // Filter to only include familiar apps
-        const familiar = data.apps.filter((app: App) => appIds.includes(app.app_id));
-        console.log('Filtered familiar apps:', familiar);
-        
-        // Randomly choose one familiar app for evaluation
-        const randomIndex = Math.floor(Math.random() * familiar.length);
-        const selectedApp = familiar[randomIndex];
-        console.log('Randomly selected app for evaluation:', selectedApp);
-        
-        // Update survey state with the randomly selected app
-        const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
-        surveyState.evaluatedApp = selectedApp.app_id;
-        localStorage.setItem('surveyState', JSON.stringify(surveyState));
-        
-        setEvaluatedApp(selectedApp);
-      } else {
-        console.error('Failed to load apps:', data.error);
-      }
+      setEvaluatedApp(selectedApp);
     } catch (error) {
-      console.error('Error loading apps:', error);
+      console.error('Error selecting random app:', error);
+      // If there's an error, redirect back to select page
+      router.push('/select');
     } finally {
       setLoading(false);
     }
