@@ -41,9 +41,10 @@ export default function HomePage() {
       familiarity: 0,
       evaluations: {
         DBGNN: [],
-        UFGC: [],
-        COT: [],
-        ZERO: [],
+        Claude: [],
+        GPT5: [],
+        Gemini: [],
+        LLManalogy: [],
         VALIDATION: []
       },
       pageOrder: [],

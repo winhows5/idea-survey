@@ -10,7 +10,7 @@ export async function loadCSVData(): Promise<AppData[]> {
     return cachedData;
   }
 
-  const csvPath = path.join(process.cwd(), 'schema', 'INPUT_Normalized_ideas_samples_20250831.csv');
+  const csvPath = path.join(process.cwd(), 'schema', 'INPUT.csv');
   const results: AppData[] = [];
 
   return new Promise((resolve, reject) => {

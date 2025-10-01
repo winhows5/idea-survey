@@ -14,7 +14,7 @@ interface Selections {
   [originalNumber: number]: boolean;
 }
 
-const SOURCES = ['DBGNN', 'UFGC', 'COT', 'ZERO', 'VALIDATION'];
+const SOURCES = ['DBGNN', 'Claude', 'GPT5', 'Gemini', 'LLManalogy', 'VALIDATION'];
 const PROGRESS_VALUES = [42, 56, 70, 84, 100];
 
 // Helper function to shuffle array
@@ -239,14 +239,16 @@ export default function EvaluationPage() {
       if (!surveyState.evaluations) {
         surveyState.evaluations = {
           DBGNN: [],
-          UFGC: [],
-          COT: [],
-          ZERO: [],
+          Claude: [],
+          GPT5: [],
+          Gemini: [],
+          LLManalogy: [],
           VALIDATION: [],
           DBGNN_none: false,
-          UFGC_none: false,
-          COT_none: false,
-          ZERO_none: false,
+          Claude_none: false,
+          GPT5_none: false,
+          Gemini_none: false,
+          LLManalogy_none: false,
           VALIDATION_none: false
         };
       }

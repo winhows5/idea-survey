@@ -49,9 +49,10 @@ export async function POST(request: NextRequest) {
       prolific_id: surveyData.prolificId || '',
       familiarity: familiarityValue, // Now an INT instead of JSON
       DBGNN: JSON.stringify(surveyData.evaluations?.DBGNN || {}),
-      UFGC: JSON.stringify(surveyData.evaluations?.UFGC || {}),
-      COT: JSON.stringify(surveyData.evaluations?.COT || {}),
-      ZERO: JSON.stringify(surveyData.evaluations?.ZERO || {}),
+      Claude: JSON.stringify(surveyData.evaluations?.Claude || {}),
+      GPT5: JSON.stringify(surveyData.evaluations?.GPT5 || {}),
+      Gemini: JSON.stringify(surveyData.evaluations?.Gemini || {}),
+      LLManalogy: JSON.stringify(surveyData.evaluations?.LLManalogy || {}),
       Validation: JSON.stringify(surveyData.evaluations?.VALIDATION || {})
     };
     

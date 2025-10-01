@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     
     // Test simple insert
     const testData = {
-      ResponseId: 'test-123',
+      ResponseId: 'test-' + Date.now(),
       StartDate: new Date().toISOString(),
       EndDate: new Date().toISOString(),
       Progress: 100,
@@ -43,9 +43,10 @@ export async function POST(request: NextRequest) {
       prolific_id: 'test-prolific',
       familiarity: '{}',
       DBGNN: '{}',
-      UFGC: '{}',
-      COT: '{}',
-      ZERO: '{}',
+      Claude: '{}',
+      GPT5: '{}',
+      Gemini: '{}',
+      LLManalogy: '{}',
       Validation: '{}'
     };
     
@@ -60,8 +61,8 @@ export async function POST(request: NextRequest) {
       INSERT INTO survey_responses (
         ResponseId, StartDate, EndDate, Progress, Duration, Finished,
         app_id_selected, app_id_evaluated, prolific_id, familiarity,
-        DBGNN, UFGC, COT, ZERO, Validation
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        DBGNN, Claude, GPT5, Gemini, LLManalogy, Validation
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
     await connection.execute(query, [
@@ -76,9 +77,10 @@ export async function POST(request: NextRequest) {
       testData.prolific_id,
       testData.familiarity,
       testData.DBGNN,
-      testData.UFGC,
-      testData.COT,
-      testData.ZERO,
+      testData.Claude,
+      testData.GPT5,
+      testData.Gemini,
+      testData.LLManalogy,
       testData.Validation
     ]);
     

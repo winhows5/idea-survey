@@ -51,7 +51,7 @@ mysql -u your_username -p survey_app < schema/schema.sql
 Ensure the CSV file is present:
 ```bash
 # Verify CSV file exists
-ls -la schema/INPUT_Normalized_ideas_samples_20250831.csv
+ls -la schema/INPUT.csv
 ```
 
 ### 4. Development Server
