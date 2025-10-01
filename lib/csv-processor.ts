@@ -4,6 +4,7 @@ import path from 'path';
 import { AppData } from './types';
 
 let cachedData: AppData[] | null = null;
+let cachedUniqueApps: {app_id: string, app_name: string}[] | null = null;
 
 export async function loadCSVData(): Promise<AppData[]> {
   if (cachedData) {
@@ -17,11 +18,7 @@ export async function loadCSVData(): Promise<AppData[]> {
     fs.createReadStream(csvPath)
       .pipe(csv())
       .on('data', (data) => {
-    
-        // Filter out rows where app_id or app_name is undefined
-        // if (data.app_id && data.app_name) {
-           results.push(data);
-        // }
+        results.push(data);
       })
       .on('end', () => {
         console.log('Total rows loaded:', results.length);
@@ -33,6 +30,11 @@ export async function loadCSVData(): Promise<AppData[]> {
 }
 
 export async function getUniqueApps(): Promise<{app_id: string, app_name: string}[]> {
+  // Return cached unique apps if available
+  if (cachedUniqueApps) {
+    return cachedUniqueApps;
+  }
+
   const data = await loadCSVData();
   const uniqueApps = new Map<string, string>();
   
@@ -42,10 +44,15 @@ export async function getUniqueApps(): Promise<{app_id: string, app_name: string
     }
   });
   
-  return Array.from(uniqueApps.entries()).map(([app_id, app_name]) => ({
+  const result = Array.from(uniqueApps.entries()).map(([app_id, app_name]) => ({
     app_id,
     app_name
   }));
+
+  // Cache the unique apps result
+  cachedUniqueApps = result;
+  
+  return result;
 }
 
 export async function getIdeasBySource(appId: string, source: string): Promise<{text: string, originalNumber: number}[]> {
