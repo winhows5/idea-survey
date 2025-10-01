@@ -17,8 +17,8 @@ export default function CompletePage() {
   // Redirect URLs based on survey type
   const redirectUrls = {
     intent: 'https://app.prolific.com/submissions/complete?cc=C18WUNLX',
-    usefulness: 'https://app.prolific.com',
-    originality: 'https://app.prolific.com',
+    usefulness: 'https://app.prolific.com/submissions/complete?cc=CECOU946',
+    originality: 'https://app.prolific.com/submissions/complete?cc=CVWWYPQS',
     intent_student: 'https://smeal.qualtrics.com/jfe/form/SV_85FcguoLuL36f3v',
     usefulness_student: 'https://smeal.qualtrics.com/jfe/form/SV_85FcguoLuL36f3v',
     originality_student: 'https://smeal.qualtrics.com/jfe/form/SV_85FcguoLuL36f3v'
