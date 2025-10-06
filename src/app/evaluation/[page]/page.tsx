@@ -141,6 +141,8 @@ export default function EvaluationPage() {
         const sources = await getSourceOrder(evaluatedAppId);
         setSourceOrder(sources);
         
+        console.log(`Evaluation Page ${pageNumber} - Source order: [${sources.join(', ')}]`);
+        
         // Get the current source for this page
         const currentSource = sources[sourceIndex];
         if (!currentSource) {
@@ -148,6 +150,8 @@ export default function EvaluationPage() {
           router.push('/complete');
           return;
         }
+        
+        console.log(`Evaluation Page ${pageNumber} - Current source: ${currentSource}, Progress: ${progress}%`);
         
         // Fetch ideas for this source and app
         const response = await fetch(`/api/ideas?appId=${evaluatedAppId}&source=${currentSource}`);
@@ -239,6 +243,7 @@ export default function EvaluationPage() {
             selectedIdeaNumbers.push(parseInt(originalNumber));
           }
         });
+        console.log(`Evaluation Page ${pageNumber} - User selected ideas: [${selectedIdeaNumbers.join(', ')}]`);
       }
       
       // Update evaluations for this source
