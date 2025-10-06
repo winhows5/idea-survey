@@ -42,6 +42,11 @@ export default function HomePage() {
         SOURCE3: [],
         SOURCE4: [],
         SOURCE5: [],
+        SOURCE6: [],
+        SOURCE7: [],
+        SOURCE8: [],
+        SOURCE9: [],
+        SOURCE10: [],
         VALIDATION: []
       },
       pageOrder: [],
