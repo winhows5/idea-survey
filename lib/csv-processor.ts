@@ -123,3 +123,18 @@ export function getRandomItems<T>(array: T[], count: number): T[] {
   const shuffled = shuffleArray(array);
   return shuffled.slice(0, count);
 }
+
+export async function getAvailableSourcesForApp(appId: string): Promise<string[]> {
+  const data = await loadCSVData();
+  
+  // Get all unique sources for this app (excluding VALIDATION which is always available)
+  const sources = new Set<string>();
+  
+  data.forEach(row => {
+    if (row.app_id === appId && row.source !== 'VALIDATION') {
+      sources.add(row.source);
+    }
+  });
+  
+  return Array.from(sources);
+}

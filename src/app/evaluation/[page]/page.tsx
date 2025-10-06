@@ -29,7 +29,7 @@ const shuffleArray = (array: string[]) => {
 };
 
 // Helper function to get or create randomized source order (3 random + validation)
-const getSourceOrder = () => {
+const getSourceOrder = async (appId: string): Promise<string[]> => {
   // Check if we're in the browser environment
   if (typeof window === 'undefined') {
     console.log('Running on server, returning default SOURCES order');
@@ -40,20 +40,40 @@ const getSourceOrder = () => {
   
   // If pageOrder doesn't exist or is empty, create a randomized order
   if (!surveyState.pageOrder || surveyState.pageOrder.length === 0) {
-    // Randomly select 3 sources from non-validation sources
-    const shuffledNonValidation = shuffleArray(NON_VALIDATION_SOURCES);
-    const selectedSources = shuffledNonValidation.slice(0, 3);
-    
-    // Add validation source and shuffle the final order
-    const finalSources = shuffleArray([...selectedSources, 'VALIDATION']);
-    
-    // Store both the page order and which sources were selected/unselected
-    surveyState.pageOrder = finalSources;
-    surveyState.selectedSources = finalSources;
-    surveyState.unselectedSources = NON_VALIDATION_SOURCES.filter(source => !selectedSources.includes(source));
-    
-    localStorage.setItem('surveyState', JSON.stringify(surveyState));
-    return finalSources;
+    try {
+      // Fetch available sources for this app
+      const response = await fetch(`/api/sources?appId=${appId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch available sources');
+      }
+      
+      const data = await response.json();
+      const availableSources = data.sources || [];
+      
+      // Randomly select 3 sources from available sources
+      const shuffledAvailable = shuffleArray(availableSources);
+      const selectedSources = shuffledAvailable.slice(0, Math.min(3, availableSources.length));
+      
+      // Add validation source and shuffle the final order
+      const finalSources = shuffleArray([...selectedSources, 'VALIDATION']);
+      
+      // Store both the page order and which sources were selected/unselected
+      surveyState.pageOrder = finalSources;
+      surveyState.selectedSources = finalSources;
+      surveyState.unselectedSources = availableSources.filter((source: string) => !selectedSources.includes(source));
+      
+      localStorage.setItem('surveyState', JSON.stringify(surveyState));
+      return finalSources;
+    } catch (error) {
+      console.error('Error fetching available sources, using fallback:', error);
+      // Fallback to default sources if API fails
+      const fallbackSources = ['SOURCE1', 'SOURCE2', 'SOURCE3', 'VALIDATION'];
+      surveyState.pageOrder = fallbackSources;
+      surveyState.selectedSources = fallbackSources;
+      surveyState.unselectedSources = [];
+      localStorage.setItem('surveyState', JSON.stringify(surveyState));
+      return fallbackSources;
+    }
   }
   
   return surveyState.pageOrder;
@@ -64,12 +84,7 @@ export default function EvaluationPage() {
   const params = useParams();
   const pageNumber = parseInt(params.page as string);
   
-  // Get randomized source order
-  const sourceOrder = getSourceOrder();
-  const sourceIndex = pageNumber - 1;
-  const source = sourceOrder[sourceIndex];
-  const progress = PROGRESS_VALUES[sourceIndex];
-  
+  const [sourceOrder, setSourceOrder] = useState<string[]>([]);
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [selections, setSelections] = useState<Selections>({});
   const [noneSelected, setNoneSelected] = useState(false);
@@ -78,7 +93,11 @@ export default function EvaluationPage() {
   const [error, setError] = useState('');
   const [evaluatedApp, setEvaluatedApp] = useState('');
   const [appName, setAppName] = useState('');
-  const [surveyType, setSurveyType] = useState<string>('intent'); // Add survey type state
+  const [surveyType, setSurveyType] = useState<string>('intent');
+
+  const sourceIndex = pageNumber - 1;
+  const source = sourceOrder[sourceIndex];
+  const progress = PROGRESS_VALUES[sourceIndex];
 
   // Function to get intro text based on survey type
   const getIntroText = (appName: string, surveyType: string) => {
@@ -118,8 +137,20 @@ export default function EvaluationPage() {
         
         setEvaluatedApp(evaluatedAppId);
         
+        // Get source order (this will fetch available sources if needed)
+        const sources = await getSourceOrder(evaluatedAppId);
+        setSourceOrder(sources);
+        
+        // Get the current source for this page
+        const currentSource = sources[sourceIndex];
+        if (!currentSource) {
+          console.error('No source found for page', pageNumber);
+          router.push('/complete');
+          return;
+        }
+        
         // Fetch ideas for this source and app
-        const response = await fetch(`/api/ideas?appId=${evaluatedAppId}&source=${source}`);
+        const response = await fetch(`/api/ideas?appId=${evaluatedAppId}&source=${currentSource}`);
         if (!response.ok) {
           throw new Error('Failed to fetch ideas');
         }
@@ -129,7 +160,7 @@ export default function EvaluationPage() {
         setAppName(data.appName || evaluatedAppId);
         
         // Load previous selections if they exist
-        const previousSelections = surveyState.evaluations?.[source] || [];
+        const previousSelections = surveyState.evaluations?.[currentSource] || [];
         const noneWasSelected = previousSelections.length === 1 && previousSelections[0] === 0;
         
         if (noneWasSelected) {
@@ -154,7 +185,7 @@ export default function EvaluationPage() {
     };
 
     loadPageData();
-  }, [source, router]);
+  }, [pageNumber, router, sourceIndex]);
 
   const handleIdeaToggle = (originalNumber: number) => {
     if (noneSelected) {
@@ -212,19 +243,11 @@ export default function EvaluationPage() {
       
       // Update evaluations for this source
       if (!surveyState.evaluations) {
-        surveyState.evaluations = {
-          SOURCE1: [-1],
-          SOURCE2: [-1],
-          SOURCE3: [-1],
-          SOURCE4: [-1],
-          SOURCE5: [-1],
-          SOURCE6: [-1],
-          SOURCE7: [-1],
-          SOURCE8: [-1],
-          SOURCE9: [-1],
-          SOURCE10: [-1],
-          VALIDATION: [-1]
-        };
+        // Initialize evaluations object with all possible sources set to [-1]
+        surveyState.evaluations = {};
+        SOURCES.forEach(src => {
+          surveyState.evaluations[src] = [-1];
+        });
       }
       
       // Save selected idea numbers (or [0] for none)
