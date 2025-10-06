@@ -14,12 +14,13 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const ideas = await getIdeasBySource(appId, source);
-    const shuffledIdeas = shuffleArray(ideas);
+    const result = await getIdeasBySource(appId, source);
+    const shuffledIdeas = shuffleArray(result.ideas);
     
     return NextResponse.json({
       success: true,
-      ideas: shuffledIdeas
+      ideas: shuffledIdeas,
+      appName: result.appName
     });
   } catch (error) {
     console.error('Error fetching ideas:', error);

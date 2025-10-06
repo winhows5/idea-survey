@@ -55,7 +55,7 @@ export async function getUniqueApps(): Promise<{app_id: string, app_name: string
   return result;
 }
 
-export async function getIdeasBySource(appId: string, source: string): Promise<{text: string, originalNumber: number}[]> {
+export async function getIdeasBySource(appId: string, source: string): Promise<{ideas: {text: string, originalNumber: number}[], appName: string}> {
   const data = await loadCSVData();
   
   // Special case for VALIDATION source
@@ -80,9 +80,15 @@ export async function getIdeasBySource(appId: string, source: string): Promise<{
         { text: row.idea_9, originalNumber: 9 },
         { text: row.idea_10, originalNumber: 10 }
       ];
-      return ideas.filter(idea => idea.text && idea.text.trim() !== '');
+      const filteredIdeas = ideas.filter(idea => idea.text && idea.text.trim() !== '');
+      
+      // For VALIDATION, we need to get the app name from the evaluated app
+      const appRows = data.filter(row => row.app_id === appId);
+      const appName = appRows.length > 0 ? appRows[0].app_name : appId;
+      
+      return { ideas: filteredIdeas, appName };
     }
-    return [];
+    return { ideas: [], appName: appId };
   }
   
   // For other sources, find matching app_id and source
@@ -104,10 +110,11 @@ export async function getIdeasBySource(appId: string, source: string): Promise<{
       { text: row.idea_9, originalNumber: 9 },
       { text: row.idea_10, originalNumber: 10 }
     ];
-    return ideas.filter(idea => idea.text && idea.text.trim() !== '');
+    const filteredIdeas = ideas.filter(idea => idea.text && idea.text.trim() !== '');
+    return { ideas: filteredIdeas, appName: row.app_name };
   }
   
-  return [];
+  return { ideas: [], appName: appId };
 }
 
 export function shuffleArray<T>(array: T[]): T[] {
