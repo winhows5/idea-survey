@@ -37,11 +37,11 @@ export default function HomePage() {
       prolificId: '',
       familiarity: 0,
       evaluations: {
-        DBGNN: [],
-        Claude: [],
-        GPT5: [],
-        Gemini: [],
-        LLManalogy: [],
+        SOURCE1: [],
+        SOURCE2: [],
+        SOURCE3: [],
+        SOURCE4: [],
+        SOURCE5: [],
         VALIDATION: []
       },
       pageOrder: [],

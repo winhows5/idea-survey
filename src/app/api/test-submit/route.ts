@@ -42,12 +42,12 @@ export async function POST(request: NextRequest) {
       app_id_evaluated: 'test-app',
       prolific_id: 'test-prolific',
       familiarity: '{}',
-      DBGNN: '{}',
-      Claude: '{}',
-      GPT5: '{}',
-      Gemini: '{}',
-      LLManalogy: '{}',
-      Validation: '{}'
+      SOURCE1: '{}',
+      SOURCE2: '{}',
+      SOURCE3: '{}',
+      SOURCE4: '{}',
+      SOURCE5: '{}',
+      VALIDATION: '{}'
     };
     
     // Convert ISO datetime strings to MySQL format
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       INSERT INTO survey_responses (
         ResponseId, StartDate, EndDate, Progress, Duration, Finished,
         app_id_selected, app_id_evaluated, prolific_id, familiarity,
-        DBGNN, Claude, GPT5, Gemini, LLManalogy, Validation
+        SOURCE1, SOURCE2, SOURCE3, SOURCE4, SOURCE5, VALIDATION
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
@@ -76,12 +76,12 @@ export async function POST(request: NextRequest) {
       testData.app_id_evaluated,
       testData.prolific_id,
       testData.familiarity,
-      testData.DBGNN,
-      testData.Claude,
-      testData.GPT5,
-      testData.Gemini,
-      testData.LLManalogy,
-      testData.Validation
+      testData.SOURCE1,
+      testData.SOURCE2,
+      testData.SOURCE3,
+      testData.SOURCE4,
+      testData.SOURCE5,
+      testData.VALIDATION
     ]);
     
     // Clean up test data

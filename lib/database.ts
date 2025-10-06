@@ -4,7 +4,7 @@ const dbConfig = {
   host: '104.197.84.217',
   user: 'idea',
   password: 'Idea2025__',
-  database: 'IDEA_DB_V2',
+  database: 'IDEA_DB_V3',
   port: 3306,
   connectTimeout: 10000,
   acquireTimeout: 10000,
@@ -69,7 +69,7 @@ export async function saveSurveyResponseByType(data: any, surveyType: string) {
       INSERT INTO ${tableName} (
         ResponseId, StartDate, EndDate, Progress, Duration, Finished,
         app_id_selected, app_id_evaluated, prolific_id, familiarity,
-        DBGNN, Claude, GPT5, Gemini, LLManalogy, Validation, deleted
+        SOURCE1, SOURCE2, SOURCE3, SOURCE4, SOURCE5, VALIDATION, deleted
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE
         EndDate = VALUES(EndDate),
@@ -80,12 +80,12 @@ export async function saveSurveyResponseByType(data: any, surveyType: string) {
         app_id_evaluated = VALUES(app_id_evaluated),
         prolific_id = VALUES(prolific_id),
         familiarity = VALUES(familiarity),
-        DBGNN = VALUES(DBGNN),
-        Claude = VALUES(Claude),
-        GPT5 = VALUES(GPT5),
-        Gemini = VALUES(Gemini),
-        LLManalogy = VALUES(LLManalogy),
-        Validation = VALUES(Validation),
+        SOURCE1 = VALUES(SOURCE1),
+        SOURCE2 = VALUES(SOURCE2),
+        SOURCE3 = VALUES(SOURCE3),
+        SOURCE4 = VALUES(SOURCE4),
+        SOURCE5 = VALUES(SOURCE5),
+        VALIDATION = VALUES(VALIDATION),
         deleted = VALUES(deleted)
     `;
     
@@ -100,12 +100,12 @@ export async function saveSurveyResponseByType(data: any, surveyType: string) {
       data.app_id_evaluated,
       data.prolific_id,
       data.familiarity,
-      data.DBGNN,
-      data.Claude,
-      data.GPT5,
-      data.Gemini,
-      data.LLManalogy,
-      data.Validation,
+      data.SOURCE1,
+      data.SOURCE2,
+      data.SOURCE3,
+      data.SOURCE4,
+      data.SOURCE5,
+      data.VALIDATION,
       data.deleted || 0
     ]);
   } finally {

@@ -14,8 +14,8 @@ interface Selections {
   [originalNumber: number]: boolean;
 }
 
-const SOURCES = ['DBGNN', 'Claude', 'GPT5', 'Gemini', 'LLManalogy', 'VALIDATION'];
-const NON_VALIDATION_SOURCES = ['DBGNN', 'Claude', 'GPT5', 'Gemini', 'LLManalogy'];
+const SOURCES = ['SOURCE1', 'SOURCE2', 'SOURCE3', 'SOURCE4', 'SOURCE5', 'VALIDATION'];
+const NON_VALIDATION_SOURCES = ['SOURCE1', 'SOURCE2', 'SOURCE3', 'SOURCE4', 'SOURCE5'];
 const PROGRESS_VALUES = [56, 70, 84, 100];
 
 // Helper function to shuffle array
@@ -33,7 +33,7 @@ const getSourceOrder = () => {
   // Check if we're in the browser environment
   if (typeof window === 'undefined') {
     console.log('Running on server, returning default SOURCES order');
-    return ['DBGNN', 'Claude', 'GPT5', 'VALIDATION']; // Return default order on server
+    return ['SOURCE1', 'SOURCE2', 'SOURCE3', 'VALIDATION']; // Return default order on server
   }
   
   const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
@@ -254,17 +254,17 @@ export default function EvaluationPage() {
       // Update evaluations for this source
       if (!surveyState.evaluations) {
         surveyState.evaluations = {
-          DBGNN: [-1],
-          Claude: [-1],
-          GPT5: [-1],
-          Gemini: [-1],
-          LLManalogy: [-1],
+          SOURCE1: [-1],
+          SOURCE2: [-1],
+          SOURCE3: [-1],
+          SOURCE4: [-1],
+          SOURCE5: [-1],
           VALIDATION: [-1],
-          DBGNN_none: false,
-          Claude_none: false,
-          GPT5_none: false,
-          Gemini_none: false,
-          LLManalogy_none: false,
+          SOURCE1_none: false,
+          SOURCE2_none: false,
+          SOURCE3_none: false,
+          SOURCE4_none: false,
+          SOURCE5_none: false,
           VALIDATION_none: false
         };
       }

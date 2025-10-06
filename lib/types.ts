@@ -26,12 +26,12 @@ export interface SurveyResponse {
   app_id_evaluated: string;
   prolific_id: string;
   familiarity: number;
-  DBGNN: string;
-  Claude: string;
-  GPT5: string;
-  Gemini: string;
-  LLManalogy: string;
-  Validation: string;
+  SOURCE1: string;
+  SOURCE2: string;
+  SOURCE3: string;
+  SOURCE4: string;
+  SOURCE5: string;
+  VALIDATION: string;
   deleted: number;
 }
 
@@ -43,11 +43,11 @@ export interface SurveyState {
   prolificId: string;
   familiarity: number;
   evaluations: {
-    DBGNN: number[];
-    Claude: number[];
-    GPT5: number[];
-    Gemini: number[];
-    LLManalogy: number[];
+    SOURCE1: number[];
+    SOURCE2: number[];
+    SOURCE3: number[];
+    SOURCE4: number[];
+    SOURCE5: number[];
     VALIDATION: number[];
   };
   pageOrder: string[];

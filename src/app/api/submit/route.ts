@@ -48,12 +48,12 @@ export async function POST(request: NextRequest) {
       app_id_evaluated: surveyData.evaluatedApp || '',
       prolific_id: surveyData.prolificId || '',
       familiarity: familiarityValue, // Now an INT instead of JSON
-      DBGNN: JSON.stringify(surveyData.evaluations?.DBGNN || {}),
-      Claude: JSON.stringify(surveyData.evaluations?.Claude || {}),
-      GPT5: JSON.stringify(surveyData.evaluations?.GPT5 || {}),
-      Gemini: JSON.stringify(surveyData.evaluations?.Gemini || {}),
-      LLManalogy: JSON.stringify(surveyData.evaluations?.LLManalogy || {}),
-      Validation: JSON.stringify(surveyData.evaluations?.VALIDATION || {})
+      SOURCE1: JSON.stringify(surveyData.evaluations?.SOURCE1 || {}),
+      SOURCE2: JSON.stringify(surveyData.evaluations?.SOURCE2 || {}),
+      SOURCE3: JSON.stringify(surveyData.evaluations?.SOURCE3 || {}),
+      SOURCE4: JSON.stringify(surveyData.evaluations?.SOURCE4 || {}),
+      SOURCE5: JSON.stringify(surveyData.evaluations?.SOURCE5 || {}),
+      VALIDATION: JSON.stringify(surveyData.evaluations?.VALIDATION || {})
     };
     
     console.log('Prepared database data:', JSON.stringify(dbData, null, 2));
