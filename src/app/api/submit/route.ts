@@ -36,6 +36,12 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    // Helper function to get evaluation data or default to [-1]
+    const getEvaluationData = (source: string) => {
+      const evaluation = surveyData.evaluations?.[source];
+      return JSON.stringify(evaluation || [-1]);
+    };
+    
     // Prepare data for database with proper fallbacks
     const dbData = {
       ResponseId: responseId,
@@ -48,12 +54,17 @@ export async function POST(request: NextRequest) {
       app_id_evaluated: surveyData.evaluatedApp || '',
       prolific_id: surveyData.prolificId || '',
       familiarity: familiarityValue, // Now an INT instead of JSON
-      SOURCE1: JSON.stringify(surveyData.evaluations?.SOURCE1 || {}),
-      SOURCE2: JSON.stringify(surveyData.evaluations?.SOURCE2 || {}),
-      SOURCE3: JSON.stringify(surveyData.evaluations?.SOURCE3 || {}),
-      SOURCE4: JSON.stringify(surveyData.evaluations?.SOURCE4 || {}),
-      SOURCE5: JSON.stringify(surveyData.evaluations?.SOURCE5 || {}),
-      VALIDATION: JSON.stringify(surveyData.evaluations?.VALIDATION || {})
+      SOURCE1: getEvaluationData('SOURCE1'),
+      SOURCE2: getEvaluationData('SOURCE2'),
+      SOURCE3: getEvaluationData('SOURCE3'),
+      SOURCE4: getEvaluationData('SOURCE4'),
+      SOURCE5: getEvaluationData('SOURCE5'),
+      SOURCE6: getEvaluationData('SOURCE6'),
+      SOURCE7: getEvaluationData('SOURCE7'),
+      SOURCE8: getEvaluationData('SOURCE8'),
+      SOURCE9: getEvaluationData('SOURCE9'),
+      SOURCE10: getEvaluationData('SOURCE10'),
+      VALIDATION: getEvaluationData('VALIDATION')
     };
     
     console.log('Prepared database data:', JSON.stringify(dbData, null, 2));
