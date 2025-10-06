@@ -14,8 +14,8 @@ interface Selections {
   [originalNumber: number]: boolean;
 }
 
-const SOURCES = ['SOURCE1', 'SOURCE2', 'SOURCE3', 'SOURCE4', 'SOURCE5', 'VALIDATION'];
-const NON_VALIDATION_SOURCES = ['SOURCE1', 'SOURCE2', 'SOURCE3', 'SOURCE4', 'SOURCE5'];
+const SOURCES = ['SOURCE1', 'SOURCE2', 'SOURCE3', 'SOURCE4', 'SOURCE5', 'SOURCE6', 'SOURCE7', 'SOURCE8', 'SOURCE9', 'SOURCE10', 'VALIDATION'];
+const NON_VALIDATION_SOURCES = ['SOURCE1', 'SOURCE2', 'SOURCE3', 'SOURCE4', 'SOURCE5', 'SOURCE6', 'SOURCE7', 'SOURCE8', 'SOURCE9', 'SOURCE10'];
 const PROGRESS_VALUES = [56, 70, 84, 100];
 
 // Helper function to shuffle array
@@ -100,101 +100,61 @@ export default function EvaluationPage() {
     }
   };
 
-  // Log current source when page changes
   useEffect(() => {
-    console.log(`Current evaluation source: ${source} (Page ${pageNumber})`);
-  }, [source, pageNumber]);
-
-  useEffect(() => {
-    loadIdeas();
-  }, [pageNumber]);
-
-  const loadIdeas = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      
-      // Get survey state
-      const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
-      const appId = surveyState.evaluatedApp;
-      const selectedAppObjects = surveyState.selectedAppObjects || [];
-      
-      // Set survey type from survey state
-      setSurveyType(surveyState.surveyType || 'intent');
-      
-      if (!appId && source !== 'VALIDATION') {
-        setError('No app selected for evaluation. Please restart the survey.');
-        return;
-      }
-      
-      setEvaluatedApp(appId);
-      
-      // Get app name from stored app objects instead of API call
-      if (appId && selectedAppObjects.length > 0) {
-        const app = selectedAppObjects.find((a: any) => a.app_id === appId);
-        setAppName(app?.app_name || appId);
-      } else if (appId) {
-        // Fallback: if selectedAppObjects not available, use appId as name
-        setAppName(appId);
-      }
-      
-      // Fetch ideas from API
-      const url = source === 'VALIDATION' 
-        ? `/api/ideas?source=${source}&appId=NA`
-        : `/api/ideas?source=${source}&appId=${appId}`;
+    const loadPageData = async () => {
+      try {
+        setLoading(true);
         
-      const response = await fetch(url);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to load ideas');
-      }
-      
-      // Convert ideas to numbered format with original numbers preserved
-      const formattedIdeas: Idea[] = data.ideas.map((idea: {text: string, originalNumber: number}, displayIndex: number) => ({
-        text: idea.text,
-        originalNumber: idea.originalNumber,
-        displayIndex
-      }));
-      
-      setIdeas(formattedIdeas);
-      
-      // Load existing selections if any
-      const existingSelections = surveyState.evaluations?.[source] || [];
-      const selectionsObj: Selections = {};
-      
-      // Convert from idea numbers back to boolean selections
-      if (Array.isArray(existingSelections) && existingSelections.length > 0) {
-        // Check if it's the new format (array of numbers) or old format (boolean array)
-        if (typeof existingSelections[0] === 'number') {
-          // New format: array of original idea numbers
-          existingSelections.forEach((originalNumber: number) => {
-            selectionsObj[originalNumber] = true;
-          });
-        } else {
-          // Old format: boolean array (for backward compatibility)
-          existingSelections.forEach((selected: boolean, index: number) => {
-            // Convert old format to new format using display index + 1
-            if (selected && formattedIdeas[index]) {
-              selectionsObj[formattedIdeas[index].originalNumber] = true;
+        // Get survey state from localStorage
+        const surveyState = JSON.parse(localStorage.getItem('surveyState') || '{}');
+        const evaluatedAppId = surveyState.evaluatedApp;
+        setSurveyType(surveyState.surveyType || 'intent');
+        
+        if (!evaluatedAppId) {
+          console.error('No evaluated app found in survey state');
+          router.push('/select');
+          return;
+        }
+        
+        setEvaluatedApp(evaluatedAppId);
+        
+        // Fetch ideas for this source and app
+        const response = await fetch(`/api/ideas?appId=${evaluatedAppId}&source=${source}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch ideas');
+        }
+        
+        const data = await response.json();
+        setIdeas(data.ideas || []);
+        setAppName(data.appName || evaluatedAppId);
+        
+        // Load previous selections if they exist
+        const previousSelections = surveyState.evaluations?.[source] || [];
+        const noneWasSelected = previousSelections.length === 1 && previousSelections[0] === 0;
+        
+        if (noneWasSelected) {
+          setNoneSelected(true);
+        } else if (previousSelections.length > 0 && previousSelections[0] !== -1) {
+          // Convert array back to selections object
+          const selectionsObj: Selections = {};
+          previousSelections.forEach((ideaNumber: number) => {
+            if (ideaNumber > 0) {
+              selectionsObj[ideaNumber] = true;
             }
           });
+          setSelections(selectionsObj);
         }
+        
+      } catch (error) {
+        console.error('Error loading page data:', error);
+        setError('Failed to load ideas. Please try again.');
+      } finally {
+        setLoading(false);
       }
-      
-      setSelections(selectionsObj);
-      
-      // Check if "none" was previously selected
-      const noneWasSelected = surveyState.evaluations?.[source + '_none'] || false;
-      setNoneSelected(noneWasSelected);
-      
-    } catch (error) {
-      console.error('Error loading ideas:', error);
-      setError('Failed to load ideas. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadPageData();
+  }, [source, router]);
 
   const handleIdeaToggle = (originalNumber: number) => {
     if (noneSelected) {
@@ -209,7 +169,6 @@ export default function EvaluationPage() {
 
   const handleNoneToggle = () => {
     if (!noneSelected) {
-      // Clear all idea selections when "none" is selected
       setSelections({});
     }
     setNoneSelected(!noneSelected);
@@ -259,19 +218,17 @@ export default function EvaluationPage() {
           SOURCE3: [-1],
           SOURCE4: [-1],
           SOURCE5: [-1],
-          VALIDATION: [-1],
-          SOURCE1_none: false,
-          SOURCE2_none: false,
-          SOURCE3_none: false,
-          SOURCE4_none: false,
-          SOURCE5_none: false,
-          VALIDATION_none: false
+          SOURCE6: [-1],
+          SOURCE7: [-1],
+          SOURCE8: [-1],
+          SOURCE9: [-1],
+          SOURCE10: [-1],
+          VALIDATION: [-1]
         };
       }
       
       // Save selected idea numbers (or [0] for none)
       surveyState.evaluations[source] = selectedIdeaNumbers;
-      surveyState.evaluations[source + '_none'] = noneSelected;
       surveyState.timestamp = new Date().toISOString();
       
       // Navigate to next page or completion
@@ -283,7 +240,6 @@ export default function EvaluationPage() {
         const unselectedSources = surveyState.unselectedSources || [];
         unselectedSources.forEach((unselectedSource: string) => {
           surveyState.evaluations[unselectedSource] = [-1];
-          surveyState.evaluations[unselectedSource + '_none'] = false;
         });
         
         localStorage.setItem('surveyState', JSON.stringify(surveyState));
@@ -308,26 +264,9 @@ export default function EvaluationPage() {
 
   if (loading) {
     return (
-      <SurveyLayout title="Loading" progress={progress}>
-        <div className="flex items-center justify-center py-12">
+      <SurveyLayout progress={progress} title={`Feature Evaluation - Page ${pageNumber} of 4`}>
+        <div className="flex justify-center items-center min-h-[400px]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span className="ml-4 text-gray-600">Loading ideas...</span>
-        </div>
-      </SurveyLayout>
-    );
-  }
-
-  if (error && ideas.length === 0) {
-    return (
-      <SurveyLayout title="" progress={progress}>
-        <div className="text-center py-12">
-          <div className="text-red-600 mb-4">{error}</div>
-          <button
-            onClick={loadIdeas}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Try Again
-          </button>
         </div>
       </SurveyLayout>
     );
@@ -336,26 +275,23 @@ export default function EvaluationPage() {
   const selectedCount = Object.values(selections).filter(Boolean).length;
 
   return (
-    <SurveyLayout title="Idea Evaluation" progress={progress}>
-      <div className="space-y-6">
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-          <p className="text-blue-800 font-medium text-lg">
+    <SurveyLayout progress={progress} title={`Feature Evaluation - Page ${pageNumber} of 4`}>
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-8">
+          <p className="text-lg text-gray-700 leading-relaxed">
             {getIntroText(appName, surveyType)}
-          </p>
-          <p className="text-blue-800 font-medium text-lg">     
-            <span className="font-bold text-red-600">Do NOT select any features that are already available in the app.</span>
           </p>
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600">{error}</p>
           </div>
         )}
 
-        <div className="space-y-4">
-          {ideas.map((idea, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
+        <div className="space-y-4 mb-8">
+          {ideas.map((idea) => (
+            <div key={idea.originalNumber} className="border border-gray-300 rounded-lg p-4 hover:bg-gray-50 transition-colors">
               <label className="flex items-start space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -366,7 +302,7 @@ export default function EvaluationPage() {
                 />
                 <div className="flex-1">
                   {/* <h3 className="font-medium text-gray-900 mb-2">
-                    Feature {index + 1}
+                    Feature {idea.displayIndex}
                   </h3> */}
                   <p className="text-gray-700 leading-relaxed">{idea.text}</p>
                 </div>

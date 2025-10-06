@@ -69,8 +69,8 @@ export async function saveSurveyResponseByType(data: any, surveyType: string) {
       INSERT INTO ${tableName} (
         ResponseId, StartDate, EndDate, Progress, Duration, Finished,
         app_id_selected, app_id_evaluated, prolific_id, familiarity,
-        SOURCE1, SOURCE2, SOURCE3, SOURCE4, SOURCE5, VALIDATION, deleted
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        SOURCE1, SOURCE2, SOURCE3, SOURCE4, SOURCE5, SOURCE6, SOURCE7, SOURCE8, SOURCE9, SOURCE10, VALIDATION, deleted
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE
         EndDate = VALUES(EndDate),
         Progress = VALUES(Progress),
@@ -85,6 +85,11 @@ export async function saveSurveyResponseByType(data: any, surveyType: string) {
         SOURCE3 = VALUES(SOURCE3),
         SOURCE4 = VALUES(SOURCE4),
         SOURCE5 = VALUES(SOURCE5),
+        SOURCE6 = VALUES(SOURCE6),
+        SOURCE7 = VALUES(SOURCE7),
+        SOURCE8 = VALUES(SOURCE8),
+        SOURCE9 = VALUES(SOURCE9),
+        SOURCE10 = VALUES(SOURCE10),
         VALIDATION = VALUES(VALIDATION),
         deleted = VALUES(deleted)
     `;
@@ -105,6 +110,11 @@ export async function saveSurveyResponseByType(data: any, surveyType: string) {
       data.SOURCE3,
       data.SOURCE4,
       data.SOURCE5,
+      data.SOURCE6,
+      data.SOURCE7,
+      data.SOURCE8,
+      data.SOURCE9,
+      data.SOURCE10,
       data.VALIDATION,
       data.deleted || 0
     ]);
