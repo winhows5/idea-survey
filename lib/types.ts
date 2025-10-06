@@ -31,6 +31,11 @@ export interface SurveyResponse {
   SOURCE3: string;
   SOURCE4: string;
   SOURCE5: string;
+  SOURCE6: string;
+  SOURCE7: string;
+  SOURCE8: string;
+  SOURCE9: string;
+  SOURCE10: string;
   VALIDATION: string;
   deleted: number;
 }
@@ -48,6 +53,11 @@ export interface SurveyState {
     SOURCE3: number[];
     SOURCE4: number[];
     SOURCE5: number[];
+    SOURCE6: number[];
+    SOURCE7: number[];
+    SOURCE8: number[];
+    SOURCE9: number[];
+    SOURCE10: number[];
     VALIDATION: number[];
   };
   pageOrder: string[];
