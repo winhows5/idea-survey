@@ -37,17 +37,17 @@ export default function HomePage() {
       prolificId: '',
       familiarity: 0,
       evaluations: {
-        SOURCE1: [],
-        SOURCE2: [],
-        SOURCE3: [],
-        SOURCE4: [],
-        SOURCE5: [],
-        SOURCE6: [],
-        SOURCE7: [],
-        SOURCE8: [],
-        SOURCE9: [],
-        SOURCE10: [],
-        VALIDATION: []
+        SOURCE1: [-1],
+        SOURCE2: [-1],
+        SOURCE3: [-1],
+        SOURCE4: [-1],
+        SOURCE5: [-1],
+        SOURCE6: [-1],
+        SOURCE7: [-1],
+        SOURCE8: [-1],
+        SOURCE9: [-1],
+        SOURCE10: [-1],
+        VALIDATION: [-1]
       },
       pageOrder: [],
       currentPage: 0
