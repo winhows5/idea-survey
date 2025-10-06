@@ -298,7 +298,7 @@ export default function EvaluationPage() {
   const selectedCount = Object.values(selections).filter(Boolean).length;
 
   return (
-    <SurveyLayout progress={progress} title={`Feature Evaluation - Page ${pageNumber} of 4`}>
+    <SurveyLayout progress={progress} title={``}>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <p className="text-lg text-gray-700 leading-relaxed">
